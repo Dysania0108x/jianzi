@@ -64,3 +64,14 @@ html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .book-import-content{border-top:1px solid var(--line);padding:15px 0;margin:16px 0;color:var(--ink)}
 .book-import-content summary{cursor:pointer;font-size:13px;color:#666255}
 .book-import-content pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:'Songti SC','STSong',serif;font-size:13px;line-height:1.9;max-height:48vh;overflow-y:auto}
+
+/* Book batch management */
+.book-toolbar{grid-template-columns:minmax(180px,1fr) auto auto auto}
+.book-selection-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;margin-bottom:14px;border:1px solid var(--line);border-radius:9px;background:rgba(255,254,249,.8);font-size:12px;color:#777368}
+.book-selection-bar .button-danger{margin-left:auto}
+.book-selection-bar .button-danger:disabled{opacity:.4;cursor:not-allowed}
+.book-selectable{position:relative;cursor:pointer;padding-top:38px}
+.book-selection-indicator{position:absolute;top:12px;left:15px;width:18px;height:18px;border:1.5px solid #b6b1a4;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#24251f;background:#fffef9}
+.book-selected{border-color:#aab72d;background:#f7f9e8}
+.book-selected .book-selection-indicator{background:#c0cb3d;border-color:#aab72d}
+@media(max-width:680px){.book-toolbar{grid-template-columns:minmax(0,1fr) auto auto}.book-toolbar>.button:last-child{grid-column:3}.book-selection-bar{gap:6px}.book-selection-bar .button-danger{margin-left:0}}
