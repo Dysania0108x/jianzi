@@ -30,3 +30,13 @@ html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .heading-dog-book{right:205px;bottom:-3px;width:108px;height:90px}
 .book-heading.page-heading-with-dog{padding-right:0}
 @media(max-width:700px){.heading-dog-board,.heading-dog-book{display:none}.board-actions{flex-wrap:wrap}.editor-bottom .save-status{display:none}}
+
+/* UI fix: editorial illustrations never overlap controls. */
+.board-cover .board-dog{width:112px;height:88px;right:10px;bottom:4px;z-index:0}
+.board-cover strong,.board-cover-count,.board-cover-bottom{z-index:1}
+.board-create-tile .peek-dog{top:14px;width:92px;height:63px}
+.confirm-overlay{z-index:80}
+.confirm-modal{max-width:390px}
+.confirm-modal p{font-size:13px;color:#777368;line-height:1.8;margin:0 0 20px}
+.button-confirm-delete{background:#9b554a;color:#fff;border-color:#9b554a}
+.button-confirm-delete:hover{background:#85463e}
