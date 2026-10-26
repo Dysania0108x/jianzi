@@ -1,41 +1,68 @@
 # 见字 · Jianzi
 
-一款本地优先的中文写作、私人书单与灵感墙应用。视觉方向：现代文学排版 + 明快的 Doodle 插画；操作简单，分类可选。
+**收藏喜欢的故事，写下自己的文字。**
 
-## 当前版本
+见字是一款简洁、自由的中文文字收藏与创作应用。你可以在这里整理读过的小说、记录阅读感想、收藏喜欢的句子，也可以随时写下日记、随笔与尚未完成的故事。
 
-- **文字**：随笔、日记、小说、歌词、摘抄、灵感、未分类。
-- **灵感墙**：独立主题墙，从文字中关联内容；自动排版，不要求手动拖动。
-- **书单**：独立页面、紧凑文字卡片、评分、阅读状态、关键词、人物及读后感搜索；可按评分和状态筛选。
-- **持久化**：Tauri 桌面版会尝试使用本地 SQLite；浏览器预览使用 localStorage。提供 JSON 备份导出。
-- **视觉素材**：独立 Doodle 风格狗狗 SVG，使用明亮的青柠绿、天空蓝和杏黄点缀，与纸白底色和中文字体统一。
-- **构建检查**：GitHub Actions 会在 push / PR 时运行前端 TypeScript 与 Vite 构建。
+不必遵循固定的记录方式，也不需要复杂的分类。让阅读、灵感与创作，自然地留在同一个地方。
 
-演示数据仅用于展示界面，不是实际阅读记录。
+## 主要功能
 
-## 开发
+- **私人书单**：收藏小说，记录评分、标签、人物与读后感；支持搜索、筛选、排序与批量管理。
+- **自由写作**：记录小说、随笔、日记、歌词、摘抄和灵感；不要求标题或固定分类。
+- **灵感墙**：将已有文字关联到不同主题，自动排版；支持卡片与列表视图，以及重命名。
+- **本地存储**：无需注册账号。macOS 桌面版使用本地 SQLite 数据库保存内容。
+- **数据备份**：支持将个人内容导出为 JSON 文件。
 
-推荐 macOS，安装 Node.js LTS、Rust 工具链以及 Tauri 所需的 macOS 系统依赖。
+## 下载与安装
+
+**当前版本：v0.1.0 Beta（开发测试阶段）**
+
+面向 macOS 的早期测试版本。正式的公开下载包将在 GitHub Releases 发布：
+
+[查看 Releases](https://github.com/Dysania0108x/jianzi/releases)
+
+目前如无可下载的 Release，可从源代码自行构建。此项目尚未进行 Apple Developer 签名与公证，macOS 可能在首次启动时提示安全警告。请仅安装来自可信来源的版本。
+
+## 使用说明
+
+见字不需要账号，也不需要云端服务。日常使用时，文字与书单保存在本机。建议定期点击应用内的「导出备份」，并将备份文件妥善保存在其他位置。
+
+**重要：** 目前尚未提供完整的应用内备份恢复功能。JSON 导出不等于已经具备一键恢复能力。请勿将唯一的重要原稿仅保存在测试版中。
+
+## 开发者指南
+
+项目基于 **Tauri 2 + React + TypeScript + SQLite**。在 macOS 上开发需要 Node.js、Rust 以及 Xcode Command Line Tools。
 
 ```bash
+git clone https://github.com/Dysania0108x/jianzi.git
+cd jianzi
 npm install
-npm run dev
+npm run tauri dev
 ```
 
-浏览器开发地址为 `http://localhost:1420`。
+构建 macOS 应用：
 
 ```bash
-npm run build
 npm run icon:dog
-npm run tauri dev
 npm run tauri build
 ```
 
-## 重要说明
+构建产物位于 `src-tauri/target/release/bundle/`。
 
-- 当前项目已接入 SQLite 初始化与数据快照保存逻辑，但还需要通过 GitHub Actions 验证前端构建，并在 macOS 上实际验证 Tauri / SQLite 插件的运行与打包。
-- 小说章节、历史版本、独立结局分支、图片导入及更完整的备份恢复流程仍待后续开发。
-- 浏览器预览的数据保存在 localStorage，清理浏览器数据可能导致丢失。请定期使用 JSON 导出备份。
-- 不要将私人小说、日记、真实数据库或密钥提交到 GitHub。数据库文件、构建产物和环境变量已加入 `.gitignore`。
+如果本地缺少 `public/doodles/gemini-dog-6.webp`，需要先准备相应的插画素材才能运行图标生成脚本。仓库内的前端构建检查不等同于 macOS 安装包、数据库或安装流程的完整验证。
 
-Mac Dock 图标使用用户提供的原始 Gemini 探头小狗 `public/doodles/gemini-dog-6.webp`。首次运行或更换图标后，先执行 `npm install` 和 `npm run icon:dog`，自动生成 Tauri 所需的 PNG / ICNS 等图标，再运行 `npm run tauri dev` 或 `npm run tauri build`。注意：`tauri dev` 窗口标题旁的系统图标或 Dock 缓存可能需要重启 App 才更新。
+## 当前限制
+
+- 小说章节、历史版本和多结局分支尚未完整实现。
+- 尚无跨设备同步、自动更新或一键备份恢复。
+- 浏览器开发预览使用 `localStorage`，与正式桌面应用的 SQLite 存储方式不同。
+- 本项目仍处于 Beta 开发阶段，功能和数据结构可能调整。
+
+## 隐私与数据
+
+应用本身不会自动将你的小说、日记或书单上传到 GitHub。请勿将个人数据库、导出的 JSON、私密文件或密钥提交到公开仓库。
+
+---
+
+*见字 · Jianzi — 一个留给文字的私人空间。*
