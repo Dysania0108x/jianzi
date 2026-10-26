@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowUpRight, Check, Plus, Search, Shuffle, SlidersHorizontal, Trash2, X } from 'lucide-react';
+import { ArrowUpRight, Check, LayoutGrid, List, Pencil, Plus, Search, Shuffle, SlidersHorizontal, Trash2, X } from 'lucide-react';
 import { initializePersistence, loadData, newId, saveData, type AppData } from './storage';
 import type { Book, Entry, EntryKind } from './types';
 
@@ -24,6 +24,9 @@ export default function App() {
   const [newBoard,setNewBoard] = useState(false);
   const [newBoardTitle,setNewBoardTitle] = useState('');
   const [activeBoard,setActiveBoard] = useState<string|null>(null);
+  const [boardView,setBoardView] = useState<'cards'|'list'>('cards');
+  const [renameBoard,setRenameBoard] = useState<string|null>(null);
+  const [renameValue,setRenameValue] = useState('');
   const [addingToBoard,setAddingToBoard] = useState<string|null>(null);
   const [pendingDelete,setPendingDelete] = useState<{kind:'entry'|'book'|'board';id:string}|null>(null);
 
