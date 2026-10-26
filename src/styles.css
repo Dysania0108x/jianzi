@@ -20,3 +20,13 @@ html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .board-create-tile .peek-dog{position:absolute;width:95px;height:66px;object-fit:contain;top:8px;left:50%;transform:translateX(-50%);pointer-events:none}
 .empty-state .empty-dog{width:145px;height:108px;object-fit:contain;margin-bottom:4px}
 @media(max-width:680px){.page-heading-with-dog{min-height:82px;padding-right:105px}.heading-dog{right:3px;width:98px;height:78px}.board-cover .board-dog{width:105px;height:90px}}
+
+/* V0.4: quiet destructive actions, not primary visual controls. */
+.button-danger{background:transparent;color:#98635a;border-color:transparent;padding-inline:7px}
+.button-danger:hover{background:#f4e7e2;border-color:#ead4cd;color:#7e433a}
+.editor-bottom{flex-wrap:wrap;gap:8px}.editor-bottom .save-status{margin-left:auto}
+.board-actions{display:flex;align-items:center;gap:8px}
+.heading-dog-board{right:210px;bottom:-8px;width:106px;height:90px}
+.heading-dog-book{right:205px;bottom:-3px;width:108px;height:90px}
+.book-heading.page-heading-with-dog{padding-right:0}
+@media(max-width:700px){.heading-dog-board,.heading-dog-book{display:none}.board-actions{flex-wrap:wrap}.editor-bottom .save-status{display:none}}
