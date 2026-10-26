@@ -12,14 +12,16 @@ try { await access(source); } catch {
 await mkdir(targetDir, { recursive: true });
 
 const size = 1024;
-const corner = 226;
+const inset = 72;
+const plateSize = size - inset * 2;
+const corner = 190;
 const roundedBackground = Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><rect width="${size}" height="${size}" rx="${corner}" ry="${corner}" fill="#C0CB3D"/></svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><rect x="${inset}" y="${inset}" width="${plateSize}" height="${plateSize}" rx="${corner}" ry="${corner}" fill="#C0CB3D"/></svg>`
 );
 
 const dog = await sharp(source)
   .trim({ background: '#00000000', threshold: 8 })
-  .resize(760, 670, { fit: 'inside', withoutEnlargement: true })
+  .resize(650, 560, { fit: 'inside', withoutEnlargement: true })
   .png()
   .toBuffer();
 const meta = await sharp(dog).metadata();
@@ -27,10 +29,10 @@ const width = meta.width ?? 0;
 const height = meta.height ?? 0;
 if (!width || !height) throw new Error('小狗素材尺寸无效');
 const left = Math.round((size - width) / 2);
-const top = Math.round((size - height) / 2) + 25;
+const top = Math.round((size - height) / 2) + 18;
 
 await sharp(roundedBackground)
   .composite([{ input: dog, left, top }])
   .png()
   .toFile(target);
-console.log('已生成圆角透明背景的 macOS 图标：' + target);
+console.log('已生成带透明安全边距的 macOS 图标：' + target);
