@@ -64,6 +64,7 @@ export default function App() {
     }
     setPendingDelete(null);
   };
+  const saveBoardName=()=>{const name=renameValue.trim();if(renameBoard&&name)setData(d=>({...d,boards:d.boards.map(b=>b.id===renameBoard?{...b,title:name}:b)}));setRenameBoard(null);};
   const createBoard=()=>{const b={id:newId('board'),title:newBoardTitle.trim()||'未命名灵感墙',description:'',entryIds:[],color:'lime' as const};setData(d=>({...d,boards:[b,...d.boards]}));setActiveBoard(b.id);setNewBoardTitle('');setNewBoard(false);};
   const toggleBoard=(entryId:string,boardId:string)=>{
     setData(d=>({...d,entries:d.entries.map(e=>e.id===entryId?{...e,boardIds:e.boardIds.includes(boardId)?e.boardIds.filter(x=>x!==boardId):[...e.boardIds,boardId]}:e),boards:d.boards.map(b=>b.id===boardId?{...b,entryIds:b.entryIds.includes(entryId)?b.entryIds.filter(x=>x!==entryId):[...b.entryIds,entryId]}:b)}));
