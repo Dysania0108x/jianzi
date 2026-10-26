@@ -7,7 +7,8 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "icon:dog": "node scripts/generate-app-icon.mjs && tauri icon src-tauri/icons/icon-source.png"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.5.0",
@@ -22,6 +23,7 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.7.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "sharp": "^0.33.5"
   }
 }
