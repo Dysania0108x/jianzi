@@ -26,6 +26,7 @@ npm run dev
 
 ```bash
 npm run build
+npm run tauri icon public/app-icon.svg
 npm run tauri dev
 npm run tauri build
 ```
@@ -36,3 +37,5 @@ npm run tauri build
 - 小说章节、历史版本、独立结局分支、图片导入及更完整的备份恢复流程仍待后续开发。
 - 浏览器预览的数据保存在 localStorage，清理浏览器数据可能导致丢失。请定期使用 JSON 导出备份。
 - 不要将私人小说、日记、真实数据库或密钥提交到 GitHub。数据库文件、构建产物和环境变量已加入 `.gitignore`。
+
+首次在 Mac 上运行前，需要先用 `npm run tauri icon public/app-icon.svg` 生成 `src-tauri/icons/icon.png` 等平台图标文件。当前 `public/app-icon.svg` 是临时原创占位图标，后续可替换为正式设计。
