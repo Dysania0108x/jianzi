@@ -66,3 +66,17 @@ npm run tauri build
 ---
 
 *见字 · Jianzi — 一个留给文字的私人空间。*
+
+## 公开测试版构建（维护者）
+
+仓库包含手动运行的 [Build macOS beta](https://github.com/Dysania0108x/jianzi/actions/workflows/macos-beta.yml) 工作流，分别构建 Apple Silicon 与 Intel Mac 的未签名安装包。构建产物暂时只上传到 GitHub Actions Artifacts，**不会自动发布 Release**。
+
+运行前请确认已将经授权的原始插画文件 `public/doodles/gemini-dog-1.webp` 至 `gemini-dog-8.webp` 提交到仓库。目前这些文件可能仅存在于开发者电脑中，缺少时工作流会主动停止，以免发布错误的占位图标。
+
+公开发行前还需确认：
+- 新安装环境中没有开发示例书籍和示例文字；
+- SQLite 保存、关闭重启、删除、JSON 导出与数据恢复经过验证；
+- 安装包未包含个人数据库、Notion 迁移文件或私人备份；
+- 未签名安装包可能被 macOS Gatekeeper 拦截；请在发布说明中清楚标注。
+
+通过测试后，再手动创建 GitHub Release 并上传已核验的 DMG。当前不应将 Actions 构建通过视为产品已完成正式发布。
