@@ -59,3 +59,10 @@ html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .board-title-edit{display:inline-flex;align-items:center;gap:9px;padding:6px 2px;background:transparent;border:0;color:var(--ink);font-family:'Songti SC','STSong',serif;font-size:19px}
 .board-title-edit svg{color:#aaa596}.board-title-edit:hover svg{color:var(--ink)}
 @media(max-width:680px){.board-list-open{grid-template-columns:28px minmax(0,1fr) 70px 18px;gap:5px}.board-list-open strong{font-size:16px}.board-list-open span:nth-child(3){font-size:10px}.board-cover-open{min-height:180px}}
+
+/* Original peeking puppy from the user's Gemini illustration set, integrated as the brand mark. */
+.wordmark{display:inline-flex;align-items:center;gap:7px;letter-spacing:0;white-space:nowrap}
+.wordmark .brand-dog{display:block;width:48px;height:41px;object-fit:contain;object-position:center;flex-shrink:0;transition:transform .18s ease}
+.wordmark:hover .brand-dog{transform:translateY(-2px)}
+.wordmark .brand-name{color:var(--ink);font-size:26px;letter-spacing:-1px}
+@media(max-width:680px){.wordmark{gap:3px}.wordmark .brand-dog{width:35px;height:31px}.wordmark .brand-name{font-size:21px}}
