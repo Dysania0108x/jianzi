@@ -26,7 +26,7 @@ npm run dev
 
 ```bash
 npm run build
-npm run tauri icon public/app-icon.svg
+npm run icon:dog
 npm run tauri dev
 npm run tauri build
 ```
@@ -38,4 +38,4 @@ npm run tauri build
 - 浏览器预览的数据保存在 localStorage，清理浏览器数据可能导致丢失。请定期使用 JSON 导出备份。
 - 不要将私人小说、日记、真实数据库或密钥提交到 GitHub。数据库文件、构建产物和环境变量已加入 `.gitignore`。
 
-首次在 Mac 上运行前，需要先用 `npm run tauri icon public/app-icon.svg` 生成 `src-tauri/icons/icon.png` 等平台图标文件。当前 `public/app-icon.svg` 是临时原创占位图标，后续可替换为正式设计。
+Mac Dock 图标使用用户提供的原始 Gemini 探头小狗 `public/doodles/gemini-dog-6.webp`。首次运行或更换图标后，先执行 `npm install` 和 `npm run icon:dog`，自动生成 Tauri 所需的 PNG / ICNS 等图标，再运行 `npm run tauri dev` 或 `npm run tauri build`。注意：`tauri dev` 窗口标题旁的系统图标或 Dock 缓存可能需要重启 App 才更新。
