@@ -1,0 +1,52 @@
+name: Build macOS beta
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: apple-silicon
+          - runner: macos-15-intel
+            arch: intel
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - name: Verify original illustration assets
+        run: |
+          if [ ! -f public/doodles/gemini-dog-6.webp ]; then
+            echo "::error::Missing public/doodles/gemini-dog-6.webp. Commit the approved original dog assets before building a public release."
+            exit 1
+          fi
+          for n in 1 2 3 4 5 6 7 8; do
+            test -f "public/doodles/gemini-dog-$n.webp" || { echo "::error::Missing dog $n asset"; exit 1; }
+          done
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Generate official icon
+        run: npm run icon:dog
+      - name: Build unsigned macOS app
+        run: npm run tauri build
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jianzi-macos-${{ matrix.arch }}-unsigned
+          path: |
+            src-tauri/target/release/bundle/dmg/*.dmg
+            src-tauri/target/release/bundle/macos/*.app
+          if-no-files-found: error
+          retention-days: 14
