@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "tauri": "tauri",
-    "icon:dog": "node scripts/generate-app-icon.mjs && tauri icon src-tauri/icons/icon-source.png"
+    "icon:dog": "node scripts/generate-app-icon.mjs && tauri icon src-tauri/icons/icon-source.png",
+    "icon:refresh-mac": "npm run icon:dog && cargo clean --manifest-path src-tauri/Cargo.toml -p jianzi && npm run tauri dev"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.5.0",
