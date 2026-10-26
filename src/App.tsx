@@ -77,7 +77,7 @@ export default function App() {
 
   return <div className="app-shell">
     <header className="topbar">
-      <button className="wordmark" onClick={()=>{setView('文字');setEditor(null);setBookEditor(null)}}><img className="brand-dog" src="/doodles/gemini-dog-6.webp" alt="" aria-hidden="true"/><span className="brand-name">见字</span></button>
+      <button className="wordmark" onClick={()=>{setView('文字');setEditor(null);setBookEditor(null)}}>见字<span>。</span></button>
       <nav className="main-nav">{(['文字','灵感墙','书单'] as View[]).map(v=><button key={v} className={`nav-item ${view===v?'active':''}`} onClick={()=>{setView(v);setEditor(null);setBookEditor(null)}}>{v}</button>)}</nav>
       <div className="top-actions">{view!=='书单'&&<label className="global-search"><Search size={15}/><input id="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="搜索"/><kbd>⌘ K</kbd></label>}{view==='文字'&&<button className="button button-primary add-top" onClick={()=>{setAddingToBoard(null);setAdding(true)}}><Plus size={15}/><span>留下一笔</span></button>}</div>
     </header>
