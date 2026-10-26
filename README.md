@@ -16,13 +16,13 @@
 
 ## 下载与安装
 
-**当前版本：v0.1.0 Beta（开发测试阶段）**
+**当前版本：v0.1.0 Beta（公开测试版）**
 
-面向 macOS 的早期测试版本。正式的公开下载包将在 GitHub Releases 发布：
+面向 macOS 的早期测试版本。现已开放下载 Apple Silicon 和 Intel Mac 测试安装包：
 
-[查看 Releases](https://github.com/Dysania0108x/jianzi/releases)
+[下载见字 v0.1.0 Beta](https://github.com/Dysania0108x/jianzi/releases/tag/v0.1.0)
 
-目前如无可下载的 Release，可从源代码自行构建。此项目尚未进行 Apple Developer 签名与公证，macOS 可能在首次启动时提示安全警告。请仅安装来自可信来源的版本。
+下载对应芯片版本的 ZIP 并解压，打开其中的 DMG 安装镜像，将见字拖入「应用程序」。此项目尚未进行 Apple Developer 签名与公证，macOS 可能在首次启动时提示安全警告。请仅安装来自可信来源的版本。
 
 ## 使用说明
 
