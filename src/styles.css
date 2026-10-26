@@ -59,3 +59,8 @@ html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .board-title-edit{display:inline-flex;align-items:center;gap:9px;padding:6px 2px;background:transparent;border:0;color:var(--ink);font-family:'Songti SC','STSong',serif;font-size:19px}
 .board-title-edit svg{color:#aaa596}.board-title-edit:hover svg{color:var(--ink)}
 @media(max-width:680px){.board-list-open{grid-template-columns:28px minmax(0,1fr) 70px 18px;gap:5px}.board-list-open strong{font-size:16px}.board-list-open span:nth-child(3){font-size:10px}.board-cover-open{min-height:180px}}
+
+.book-import-meta{font-size:12px;color:#827d70;line-height:1.7;overflow-wrap:anywhere;margin:8px 0}
+.book-import-content{border-top:1px solid var(--line);padding:15px 0;margin:16px 0;color:var(--ink)}
+.book-import-content summary{cursor:pointer;font-size:13px;color:#666255}
+.book-import-content pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:'Songti SC','STSong',serif;font-size:13px;line-height:1.9;max-height:48vh;overflow-y:auto}
