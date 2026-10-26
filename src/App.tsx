@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowUpRight, BookOpen, Check, ChevronDown, FileText, Plus, Search, Shuffle, SlidersHorizontal, Sparkles, X } from 'lucide-react';
+import { ArrowUpRight, BookOpen, Check, Plus, Search, Shuffle, SlidersHorizontal, X } from 'lucide-react';
 import { loadData, newId, saveData, type AppData } from './storage';
 import type { Book, Entry, EntryKind } from './types';
 
@@ -16,6 +16,7 @@ export default function App() {
   const [statusFilter,setStatusFilter] = useState('全部');
   const [ratingFilter,setRatingFilter] = useState('不限');
   const [sortBy,setSortBy] = useState('最近添加');
+  const [bookSortBy,setBookSortBy] = useState('最近添加');
   const [showFilters,setShowFilters] = useState(false);
   const [editor,setEditor] = useState<Entry|null>(null);
   const [bookEditor,setBookEditor] = useState<Book|null>(null);
@@ -24,7 +25,6 @@ export default function App() {
   const [newBoardTitle,setNewBoardTitle] = useState('');
   const [activeBoard,setActiveBoard] = useState<string|null>(null);
   const [addingToBoard,setAddingToBoard] = useState<string|null>(null);
-  const [notice,setNotice] = useState('');
 
   useEffect(()=>{ saveData(data); },[data]);
   useEffect(()=>{
@@ -45,7 +45,7 @@ export default function App() {
     setData(d=>({...d,entries:d.entries.map(e=>e.id===entryId?{...e,boardIds:e.boardIds.includes(boardId)?e.boardIds.filter(x=>x!==boardId):[...e.boardIds,boardId]}:e),boards:d.boards.map(b=>b.id===boardId?{...b,entryIds:b.entryIds.includes(entryId)?b.entryIds.filter(x=>x!==entryId):[...b.entryIds,entryId]}:b)}));
   };
   const entries=useMemo(()=>data.entries.filter(e=>(!query||`${e.title} ${e.body} ${e.source||''} ${e.kind}`.toLowerCase().includes(query.toLowerCase()))&&(kindFilter==='全部'||e.kind===kindFilter)).sort((a,b)=>sortBy==='最早添加'?a.createdAt.localeCompare(b.createdAt):b.updatedAt.localeCompare(a.updatedAt)),[data.entries,query,kindFilter,sortBy]);
-  const books=useMemo(()=>data.books.filter(b=>(!query||`${b.title} ${b.author} ${b.note} ${b.tags.join(' ')} ${b.people.join(' ')}`.toLowerCase().includes(query.toLowerCase()))&&(statusFilter==='全部'||b.status===statusFilter)&&(ratingFilter==='不限'||(b.rating??0)>=Number(ratingFilter))).sort((a,b)=>sortBy==='评分最高'?(b.rating??0)-(a.rating??0):b.createdAt.localeCompare(a.createdAt)),[data.books,query,statusFilter,ratingFilter,sortBy]);
+  const books=useMemo(()=>data.books.filter(b=>(!query||`${b.title} ${b.author} ${b.note} ${b.tags.join(' ')} ${b.people.join(' ')}`.toLowerCase().includes(query.toLowerCase()))&&(statusFilter==='全部'||b.status===statusFilter)&&(ratingFilter==='不限'||(b.rating??0)>=Number(ratingFilter))).sort((a,b)=>bookSortBy==='评分最高'?(b.rating??0)-(a.rating??0):b.createdAt.localeCompare(a.createdAt)),[data.books,query,statusFilter,ratingFilter,bookSortBy]);
   const boardEntries=(id:string)=>data.entries.filter(e=>data.boards.find(b=>b.id===id)?.entryIds.includes(e.id));
   const randomNote=()=>{const list=data.entries.filter(e=>e.title||e.body);if(list.length)setEditor(list[Math.floor(Math.random()*list.length)]);};
   const exportData=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`见字-备份-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);};
@@ -59,7 +59,7 @@ export default function App() {
     <main className="page">
       {view==='文字'&&<>
         <section className="page-heading heading-with-doodle"><div><div className="eyebrow">WORDS / 文字</div><h1>文字</h1></div><img className="dog-corner" src={dogs[0]} alt=""/></section>
-        <div className="toolbar"><div className="chip-row">{['全部',...kinds].map(k=><button key={k} className={`filter-chip ${kindFilter===k?'selected':''}`} onClick={()=>setKindFilter(k)}>{k}</button>)}</div><div className="toolbar-right"><select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label="排序"><option>最近添加</option><option>最早添加</option></select><button className="button button-outline" onClick={()=>setAdding(true)}><Plus size={14}/> 新建</button></div></div>
+        <div className="toolbar"><div className="chip-row">{['全部',...kinds].map(k=><button key={k} className={`filter-chip ${kindFilter===k?'selected':''}`} onClick={()=>setKindFilter(k)}>{k}</button>)}</div><div className="toolbar-right"><select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label="排序"><option>最近添加</option><option>最早添加</option></select><button className="button button-quiet" onClick={randomNote}><Shuffle size={14}/> 随便翻翻</button><button className="button button-outline" onClick={()=>setAdding(true)}><Plus size={14}/> 新建</button></div></div>
         <div className="entries-list">{entries.map((e,i)=><button className="entry-row" key={e.id} onClick={()=>setEditor(e)}><span className="entry-index">{String(i+1).padStart(2,'0')}</span><span className="entry-main"><strong>{e.title||e.body.slice(0,25)||'未命名'}</strong><span className="entry-meta">{e.kind}{e.source?` · ${e.source}`:''} · {dateLabel(e.updatedAt)}</span><span className="entry-preview">{e.body.slice(0,94)||'空白稿件'}</span></span><ArrowUpRight className="entry-arrow" size={17}/></button>)}
           {!entries.length&&<div className="empty-state"><img src={dogs[1]} alt=""/><p>没有找到文字</p><button className="button button-outline" onClick={()=>{setQuery('');setKindFilter('全部')}}>清除筛选</button></div>}</div>
       </>}
@@ -74,7 +74,7 @@ export default function App() {
 
       {view==='书单'&&<>
         <section className="page-heading book-heading"><div><div className="eyebrow">PRIVATE LIBRARY / 书单</div><h1>书单</h1></div><button className="button button-primary" onClick={startBook}><Plus size={15}/> 收藏一本书</button></section>
-        <div className="book-toolbar"><div className="book-search"><Search size={16}/><input value={query} onChange={setQuery} placeholder="书名、作者、人物、标签、感想"/></div><button className={`button button-outline ${showFilters?'is-on':''}`} onClick={()=>setShowFilters(!showFilters)}><SlidersHorizontal size={14}/> 筛选</button><select value={sortBy} onChange={e=>setSortBy(e.target.value)} aria-label="书单排序"><option>最近添加</option><option>评分最高</option></select></div>
+        <div className="book-toolbar"><div className="book-search"><Search size={16}/><input value={query} onChange={setQuery} placeholder="书名、作者、人物、标签、感想"/></div><button className={`button button-outline ${showFilters?'is-on':''}`} onClick={()=>setShowFilters(!showFilters)}><SlidersHorizontal size={14}/> 筛选</button><select value={bookSortBy} onChange={e=>setBookSortBy(e.target.value)} aria-label="书单排序"><option>最近添加</option><option>评分最高</option></select></div>
         {showFilters&&<div className="advanced-filters"><label>阅读状态<select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option>全部</option><option>想读</option><option>在读</option><option>已读</option><option>弃读</option></select></label><label>最低评分<select value={ratingFilter} onChange={e=>setRatingFilter(e.target.value)}><option value="不限">不限</option><option value="6">6 分</option><option value="7">7 分</option><option value="8">8 分</option><option value="9">9 分</option></select></label><button className="text-button" onClick={()=>{setStatusFilter('全部');setRatingFilter('不限')}}>重置</button></div>}
         <div className="book-grid">{books.map((b,i)=><button className="book-card" key={b.id} onClick={()=>setBookEditor(b)}><div className="book-card-top"><span className="book-number">{String(i+1).padStart(2,'0')}</span><span className="book-rating">{b.rating?b.rating.toFixed(1):'—'}</span></div><h2>{b.title||'未命名书籍'}</h2><div className="book-author">{b.author||'作者未填写'} <span>·</span> {b.status}</div><div className="book-tags">{b.tags.slice(0,4).map(t=><span key={t}>{t}</span>)}</div><p className="book-note">{b.note||'还没有写下感想。'}</p><div className="book-card-bottom"><span>{b.people.length?`人物：${b.people.slice(0,2).join('、')}`:'个人收藏'}</span><ArrowUpRight size={15} className="entry-arrow"/></div></button>)}<button className="book-add-card" onClick={startBook}><Plus size={18}/><span>收藏一本书</span></button></div>
         {!books.length&&<div className="empty-state"><img src={dogs[2]} alt=""/><p>没有找到相关书籍</p><button className="button button-outline" onClick={()=>{setQuery('');setStatusFilter('全部');setRatingFilter('不限')}}>清除筛选</button></div>}
@@ -88,6 +88,5 @@ export default function App() {
 
     {adding&&<div className="overlay modal-overlay" onMouseDown={e=>{if(e.target===e.currentTarget){setAdding(false);setAddingToBoard(null)}}}><section className="modal"><div className="modal-head"><h2>{addingToBoard?'加入灵感墙':'留下一笔'}</h2><button className="icon-button" onClick={()=>{setAdding(false);setAddingToBoard(null)}}><X size={18}/></button></div>{addingToBoard&&<div className="existing-entry-list"><span className="field-label">选择已有文字</span>{data.entries.filter(e=>e.title||e.body).map(e=><button key={e.id} className={`existing-entry-option ${data.boards.find(b=>b.id===addingToBoard)?.entryIds.includes(e.id)?'is-added':''}`} onClick={()=>toggleBoard(e.id,addingToBoard)}><span><strong>{e.title||e.body.slice(0,32)}</strong><small>{e.kind}</small></span><span>{data.boards.find(b=>b.id===addingToBoard)?.entryIds.includes(e.id)?'已加入':'＋'}</span></button>)}</div>}<div className="modal-section-label">{addingToBoard?'或新建一条文字':'选择记录类型'}</div><div className="kind-grid">{kinds.map((k,i)=><button key={k} className="kind-tile" onClick={()=>startEntry(k)}><span className={`kind-symbol kind-symbol-${i}`}>{['✎','☼','文','♫','“ ”','✳','＋'][i]}</span><span>{k}</span></button>)}</div>{!addingToBoard&&<button className="button button-outline modal-book-action" onClick={startBook}><BookOpen size={15}/> 收藏一本书</button>}</section></div>}
     {newBoard&&<div className="overlay modal-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setNewBoard(false)}}><section className="modal"><div className="modal-head"><h2>新建灵感墙</h2><button className="icon-button" onClick={()=>setNewBoard(false)}><X size={18}/></button></div><form onSubmit={e=>{e.preventDefault();createBoard()}}><input className="form-input" value={newBoardTitle} onChange={e=>setNewBoardTitle(e.target.value)} placeholder="墙的名字" autoFocus/><div className="modal-actions"><button type="button" className="button button-outline" onClick={()=>setNewBoard(false)}>取消</button><button type="submit" className="button button-primary">创建</button></div></form></section></div>}
-    {notice&&<div className="toast" onAnimationEnd={()=>setNotice('')}>{notice}<button onClick={()=>setNotice('')}><X size={13}/></button></div>}
   </div>;
 }
