@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowUpRight, BookOpen, Check, Plus, Search, Shuffle, SlidersHorizontal, X } from 'lucide-react';
-import { loadData, newId, saveData, type AppData } from './storage';
+import { initializePersistence, loadData, newId, saveData, type AppData } from './storage';
 import type { Book, Entry, EntryKind } from './types';
 
 type View = '文字' | '灵感墙' | '书单';
@@ -10,6 +10,7 @@ const dateLabel = (s:string) => { const d=new Date(s); return Number.isNaN(d.get
 
 export default function App() {
   const [data,setData] = useState<AppData>(()=>loadData());
+  const [ready,setReady] = useState(false);
   const [view,setView] = useState<View>('文字');
   const [query,setQuery] = useState('');
   const [kindFilter,setKindFilter] = useState('全部');
@@ -26,7 +27,7 @@ export default function App() {
   const [activeBoard,setActiveBoard] = useState<string|null>(null);
   const [addingToBoard,setAddingToBoard] = useState<string|null>(null);
 
-  useEffect(()=>{ saveData(data); },[data]);
+  useEffect(()=>{\n    let alive = true;\n    initializePersistence().then(loaded => { if(alive){ setData(loaded); setReady(true); } }).catch(error => { console.error('初始化本地数据失败', error); if(alive) setReady(true); });\n    return () => { alive = false; };\n  },[]);\n  useEffect(()=>{ if(ready) void saveData(data); },[data,ready]);
   useEffect(()=>{
     const key=(e:KeyboardEvent)=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.getElementById('search')?.focus();} if(e.key==='Escape'){setEditor(null);setBookEditor(null);setAdding(false);setNewBoard(false);} };
     window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key);
@@ -82,7 +83,7 @@ export default function App() {
     </main>
     <footer className="app-footer"><span>见字<span className="dot">。</span></span><span>你的文字，只留在你的空间里。</span><button className="text-button" onClick={exportData}>导出备份</button></footer>
 
-    {editor&&<div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setEditor(null)}}><section className="editor-panel"><div className="editor-top"><span>{editor.kind}</span><button className="icon-button" onClick={()=>setEditor(null)} aria-label="关闭"><X size={18}/></button></div><input className="editor-title" placeholder="标题" value={editor.title} onChange={e=>{const n={...editor,title:e.target.value,updatedAt:new Date().toISOString()};setEditor(n);setEntry(n)}}/><div className="editor-kind"><select value={editor.kind} onChange={e=>{const n={...editor,kind:e.target.value as EntryKind};setEditor(n);setEntry(n)}}>{kinds.map(k=><option key={k}>{k}</option>)}</select><span>创建于 {dateLabel(editor.createdAt)}</span></div><textarea className="editor-body" placeholder="从这里开始……" value={editor.body} onChange={e=>{const n={...editor,body:e.target.value,updatedAt:new Date().toISOString()};setEditor(n);setEntry(n)}}/>{['歌词','摘抄'].includes(editor.kind)&&<input className="editor-source" placeholder="出处（可选）" value={editor.source||''} onChange={e=>{const n={...editor,source:e.target.value};setEditor(n);setEntry(n)}}/>}<div className="editor-bottom"><span>已保存到当前设备的浏览器</span><button className="button button-primary" onClick={()=>setEditor(null)}><Check size={14}/> 完成</button></div></section></div>}
+    {editor&&<div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setEditor(null)}}><section className="editor-panel"><div className="editor-top"><span>{editor.kind}</span><button className="icon-button" onClick={()=>setEditor(null)} aria-label="关闭"><X size={18}/></button></div><input className="editor-title" placeholder="标题" value={editor.title} onChange={e=>{const n={...editor,title:e.target.value,updatedAt:new Date().toISOString()};setEditor(n);setEntry(n)}}/><div className="editor-kind"><select value={editor.kind} onChange={e=>{const n={...editor,kind:e.target.value as EntryKind};setEditor(n);setEntry(n)}}>{kinds.map(k=><option key={k}>{k}</option>)}</select><span>创建于 {dateLabel(editor.createdAt)}</span></div><textarea className="editor-body" placeholder="从这里开始……" value={editor.body} onChange={e=>{const n={...editor,body:e.target.value,updatedAt:new Date().toISOString()};setEditor(n);setEntry(n)}}/>{['歌词','摘抄'].includes(editor.kind)&&<input className="editor-source" placeholder="出处（可选）" value={editor.source||''} onChange={e=>{const n={...editor,source:e.target.value};setEditor(n);setEntry(n)}}/>}<div className="editor-bottom"><span>自动保存到本地</span><button className="button button-primary" onClick={()=>setEditor(null)}><Check size={14}/> 完成</button></div></section></div>}
 
     {bookEditor&&<div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setBookEditor(null)}}><section className="editor-panel book-editor"><div className="editor-top"><span>书单 / 个人收藏</span><button className="icon-button" onClick={()=>setBookEditor(null)} aria-label="关闭"><X size={18}/></button></div><input className="editor-title" placeholder="书名" value={bookEditor.title} onChange={e=>{const n={...bookEditor,title:e.target.value};setBookEditor(n);setBook(n)}}/><input className="editor-source" placeholder="作者" value={bookEditor.author} onChange={e=>{const n={...bookEditor,author:e.target.value};setBookEditor(n);setBook(n)}}/><div className="book-editor-fields"><label>阅读状态<select value={bookEditor.status} onChange={e=>{const n={...bookEditor,status:e.target.value as Book['status']};setBookEditor(n);setBook(n)}}>{['想读','在读','已读','弃读'].map(s=><option key={s}>{s}</option>)}</select></label><label>评分<select value={bookEditor.rating??''} onChange={e=>{const n={...bookEditor,rating:e.target.value?Number(e.target.value):undefined};setBookEditor(n);setBook(n)}}><option value="">未评分</option>{Array.from({length:20},(_,i)=>(i+1)/2).reverse().map(n=><option key={n} value={n}>{n.toFixed(1)} / 10</option>)}</select></label></div><input className="editor-source" placeholder="关键词，用逗号分隔" value={bookEditor.tags.join('，')} onChange={e=>{const n={...bookEditor,tags:e.target.value.split(/[,，]/).map(x=>x.trim()).filter(Boolean)};setBookEditor(n);setBook(n)}}/><input className="editor-source" placeholder="人物 / CP，用逗号分隔" value={bookEditor.people.join('，')} onChange={e=>{const n={...bookEditor,people:e.target.value.split(/[,，]/).map(x=>x.trim()).filter(Boolean)};setBookEditor(n);setBook(n)}}/><textarea className="editor-body book-note-editor" placeholder="读后感……" value={bookEditor.note} onChange={e=>{const n={...bookEditor,note:e.target.value};setBookEditor(n);setBook(n)}}/><div className="editor-bottom"><span>已保存到当前设备的浏览器</span><button className="button button-primary" onClick={()=>setBookEditor(null)}><Check size={14}/> 完成</button></div></section></div>}
 
