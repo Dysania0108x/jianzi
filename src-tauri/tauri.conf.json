@@ -10,21 +10,32 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [{
-      "title": "见字",
-      "width": 1280,
-      "height": 840,
-      "minWidth": 980,
-      "minHeight": 680,
-      "resizable": true
-    }],
-    "security": { "csp": null }
+    "windows": [
+      {
+        "title": "见字",
+        "width": 1280,
+        "height": 840,
+        "minWidth": 980,
+        "minHeight": 680,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
   },
   "bundle": {
     "active": true,
     "targets": "all",
     "category": "Productivity",
     "shortDescription": "自由写作与私人文字收藏",
-    "longDescription": "见字是一款本地优先的中文写作、灵感收藏与私人书单应用。"
+    "longDescription": "见字是一款本地优先的中文写作、灵感收藏与私人书单应用。",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
   }
 }
