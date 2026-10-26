@@ -10,3 +10,13 @@ html,body,#root{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .app-shell{width:100%;max-width:1440px;margin-inline:auto;min-width:0;padding-inline:clamp(20px,4vw,64px)}
 .topbar{min-width:0}.top-actions{min-width:0}.page-heading{min-width:0}
 @media(max-width:1100px){.topbar{grid-template-columns:auto 1fr auto}.main-nav{justify-self:center}.global-search kbd{display:none}}
+
+/* Gemini dog illustrations: restrained editorial placement, no decorative card frames. */
+.page-heading-with-dog{min-height:105px;align-items:center;padding-right:170px}
+.heading-dog{position:absolute;right:26px;bottom:0;width:134px;height:106px;object-fit:contain;object-position:center bottom;pointer-events:none}
+.board-cover .board-dog{position:absolute;right:8px;bottom:0;width:124px;height:105px;object-fit:contain;object-position:right bottom;pointer-events:none;opacity:.96}
+.board-cover strong{max-width:75%;position:relative;z-index:1}
+.board-create-tile{position:relative;overflow:hidden;padding-top:64px}
+.board-create-tile .peek-dog{position:absolute;width:95px;height:66px;object-fit:contain;top:8px;left:50%;transform:translateX(-50%);pointer-events:none}
+.empty-state .empty-dog{width:145px;height:108px;object-fit:contain;margin-bottom:4px}
+@media(max-width:680px){.page-heading-with-dog{min-height:82px;padding-right:105px}.heading-dog{right:3px;width:98px;height:78px}.board-cover .board-dog{width:105px;height:90px}}
